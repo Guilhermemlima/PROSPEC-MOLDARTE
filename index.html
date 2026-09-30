@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moldarte3D CRM</title>
+<style>
+:root{
+  --bg:#f5f6f8; --card:#fff; --ink:#1b1f24; --muted:#6b7280; --line:#e4e7ec;
+  --pri:#6d28d9; --pri-soft:#ede9fe; --ok:#16a34a; --ok-soft:#dcfce7; --warn:#d97706; --warn-soft:#fef3c7;
+  --bad:#dc2626; --bad-soft:#fee2e2; --info:#2563eb; --info-soft:#dbeafe; --teal:#0d9488; --teal-soft:#ccfbf1;
+  --gray-soft:#eef0f3; --wa:#25d366;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0f1115; --card:#181b21; --ink:#e7e9ee; --muted:#9aa1ad; --line:#2a2f38;
+    --pri:#a78bfa; --pri-soft:#2e2350; --ok:#4ade80; --ok-soft:#14331f; --warn:#fbbf24; --warn-soft:#3a2c0c;
+    --bad:#f87171; --bad-soft:#3b1414; --info:#60a5fa; --info-soft:#132a4a; --teal:#2dd4bf; --teal-soft:#0f3330; --gray-soft:#242832;}
+}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top{max-width:1280px;margin:auto;display:flex;align-items:center;gap:16px;padding:10px 16px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:18px;color:var(--pri)}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:none;border:0;padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:600;cursor:pointer;font-size:14px}
+nav button.on{background:var(--pri-soft);color:var(--pri)}
+.spacer{flex:1}
+main{max-width:1280px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid{display:grid;gap:12px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.kpi .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .v{font-size:24px;font-weight:800;margin-top:4px}
+h3{margin:0 0 8px;font-size:15px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+select.auto,input.auto{width:auto}
+textarea{min-height:110px;resize:vertical}
+label{font-size:12px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px}
+label.chk{display:flex;gap:6px;align-items:center;margin:0;color:var(--ink);font-weight:500;font-size:13px;cursor:pointer}
+label.chk input{width:auto}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap}
+.btn:hover{border-color:var(--pri)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#073b1c}
+.btn.sm{padding:4px 8px;font-size:12px}
+.btn.danger{color:var(--bad)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--bg)}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.s-novo{background:var(--info-soft);color:var(--info)}
+.s-enviado{background:var(--pri-soft);color:var(--pri)}
+.s-respondeu{background:var(--teal-soft);color:var(--teal)}
+.s-visita{background:var(--warn-soft);color:var(--warn)}
+.s-fechado{background:var(--ok-soft);color:var(--ok)}
+.s-perdido{background:var(--bad-soft);color:var(--bad)}
+.p{display:inline-block;width:20px;height:20px;border-radius:6px;text-align:center;font-size:12px;font-weight:800;line-height:20px;background:var(--gray-soft);color:var(--muted)}
+.p-A{background:var(--ok-soft);color:var(--ok)} .p-B{background:var(--warn-soft);color:var(--warn)} .p-C{background:var(--gray-soft);color:var(--muted)}
+.muted{color:var(--muted)} .small{font-size:12px}
+.kanban{display:grid;grid-template-columns:repeat(6,minmax(190px,1fr));gap:10px;overflow-x:auto;align-items:start}
+.col{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:200px}
+.col h4{margin:0 0 8px;display:flex;justify-content:space-between;gap:4px;font-size:13px}
+.col.drop{outline:2px dashed var(--pri)}
+.kc{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:6px;cursor:grab;font-size:13px}
+.kc b{display:block}
+.more{font-size:12px;color:var(--muted);text-align:center;padding:6px}
+.two{display:grid;grid-template-columns:330px 1fr;gap:12px;align-items:start}
+.tpl{padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer}
+.tpl.on{border-color:var(--pri);background:var(--pri-soft)}
+.preview{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;min-height:80px}
+.list-check{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.list-check label{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);margin:0;color:var(--ink);font-weight:500;font-size:13px;cursor:pointer}
+.list-check input{width:auto}
+.queue{max-height:420px;overflow:auto}
+.queue-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.queue-item.done{opacity:.45}
+dialog{border:0;border-radius:14px;padding:0;width:min(760px,94vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dlg-b{padding:16px;max-height:72vh;overflow:auto}
+.dlg-f{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;margin-bottom:12px}
+.info a{color:var(--pri)}
+.hist{font-size:13px;border-left:2px solid var(--line);padding-left:10px;margin:6px 0}
+.hint{font-size:12px;color:var(--muted)}
+.bar{height:8px;border-radius:4px;background:var(--gray-soft);overflow:hidden;display:flex;min-width:80px}
+.bar i{display:block;height:100%}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;opacity:0;transition:.2s;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+.hide{display:none!important}
+@media (max-width:860px){.two,.f2{grid-template-columns:1fr} .hide-m{display:none} .grid2{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<header><div class="top">
+  <div class="brand">Moldarte3D CRM</div>
+  <nav id="nav">
+    <button data-v="painel" class="on">Painel</button>
+    <button data-v="clientes">Clientes</button>
+    <button data-v="funil">Funil</button>
+    <button data-v="envio">Enviar mensagens</button>
+    <button data-v="mensagens">Mensagens salvas</button>
+  </nav>
+  <div class="spacer"></div>
+  <button class="btn" id="btnBackup">Backup / Importar</button>
+</div></header>
+
+<main>
+  <!-- PAINEL -->
+  <section id="v-painel">
+    <div class="grid kpis" id="kpis"></div>
+    <div class="grid grid2" style="grid-template-columns:1fr 1fr;margin-top:12px">
+      <div class="card"><h3>Últimos fechamentos</h3><div id="ultFech"></div></div>
+      <div class="card"><h3>Precisam de retorno</h3><div id="retorno"></div><p class="hint">Data de retorno vencida, ou enviado/respondeu/visita sem novo contato há mais de 3 dias.</p></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>Por segmento</h3>
+      <div style="overflow-x:auto"><table id="tbSeg"></table></div>
+    </div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section id="v-clientes" class="hide">
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <input id="busca" placeholder="Buscar nome, telefone, bairro, observação..." style="flex:1;min-width:200px">
+        <select id="fStatus" class="auto"><option value="">Todos os status</option></select>
+        <select id="fSeg" class="auto"><option value="">Todos os segmentos</option></select>
+        <select id="fPri" class="auto"><option value="">Toda prioridade</option><option>A</option><option>B</option><option>C</option></select>
+        <select id="fBairro" class="auto"><option value="">Todos os bairros</option></select>
+        <label class="chk"><input type="checkbox" id="fWhats"> Só WhatsApp</label>
+      </div>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn pri" id="btnNovo">+ Novo cliente</button>
+        <button class="btn" id="btnExpCsv">Exportar CSV</button>
+        <div class="spacer"></div><span class="hint" id="contagem"></span>
+      </div>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th></th><th>Nome</th><th class="hide-m">Segmento</th><th class="hide-m">Bairro</th><th>Status</th><th>Valor</th><th class="hide-m">Últ. contato</th></tr></thead>
+        <tbody id="tbClientes"></tbody>
+      </table></div>
+      <div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="maisCli">Mostrar mais</button></div>
+    </div>
+  </section>
+
+  <!-- FUNIL -->
+  <section id="v-funil" class="hide">
+    <div class="row" style="margin-bottom:10px">
+      <select id="kSeg" class="auto"><option value="">Todos os segmentos</option></select>
+      <select id="kPri" class="auto"><option value="">Toda prioridade</option><option>A</option><option>B</option><option>C</option></select>
+      <span class="hint">Arraste os cards entre as colunas para mudar o status. Clique para abrir.</span>
+    </div>
+    <div class="kanban" id="kanban"></div>
+  </section>
+
+  <!-- ENVIO -->
+  <section id="v-envio" class="hide">
+    <div class="two">
+      <div class="card">
+        <h3>1. Mensagem</h3>
+        <div id="envioTpls"></div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>2. Clientes</h3>
+          <div class="row" style="margin-bottom:8px">
+            <select id="eStatus" class="auto"><option value="">Todos os status</option></select>
+            <select id="eSeg" class="auto"><option value="">Todos os segmentos</option></select>
+            <select id="ePri" class="auto"><option value="">Toda prioridade</option><option>A</option><option>B</option><option>C</option></select>
+            <input id="eBusca" placeholder="Filtrar..." style="flex:1;min-width:120px">
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <label class="chk"><input type="checkbox" id="eWhats" checked> Só celular/WhatsApp</label>
+            <div class="spacer"></div>
+            <button class="btn sm" id="selTodos">Marcar todos da lista</button>
+            <button class="btn sm" id="selNenhum">Limpar seleção</button>
+          </div>
+          <div class="list-check" id="envioLista"></div>
+          <p class="hint" id="envioCont"></p>
+        </div>
+        <div class="card">
+          <h3>3. Prévia e envio</h3>
+          <div class="preview" id="envioPrev"></div>
+          <div class="row" style="margin-top:10px">
+            <label class="chk"><input type="checkbox" id="autoStatus" checked> Ao enviar, mudar "Novo" para "Enviado"</label>
+          </div>
+          <div id="fila" class="queue" style="margin-top:10px"></div>
+          <p class="hint">Cada botão abre o WhatsApp com a mensagem pronta, e você só aperta enviar. O envio fica no histórico do cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENSAGENS -->
+  <section id="v-mensagens" class="hide">
+    <div class="two">
+      <div class="card">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 style="margin:0">Mensagens</h3><button class="btn pri sm" id="btnNovaMsg">+ Nova</button></div>
+        <div id="listaTpls"></div>
+      </div>
+      <div class="card" id="editTpl">
+        <div class="f2">
+          <div><label>Título</label><input id="tTitulo"></div>
+          <div><label>Segmento (usada no envio automático)</label><select id="tSeg"><option value="">Nenhum (mensagem avulsa)</option></select></div>
+        </div>
+        <div class="info" id="tOffer" style="margin-top:10px"></div>
+        <label>Texto da mensagem</label><textarea id="tTexto" style="min-height:240px"></textarea>
+        <p class="hint">Variáveis: <b>{saudacao}</b> (bom dia/boa tarde/boa noite pelo horário), <b>{empresa}</b> (nome do estabelecimento), <b>{nome}</b> (primeiro nome), <b>{bairro}</b>, <b>{cidade}</b>, <b>{valor}</b>, <b>{pedido}</b></p>
+        <div class="row"><button class="btn pri" id="salvarTpl">Salvar</button><button class="btn" id="copiarTpl">Copiar texto</button><div class="spacer"></div><button class="btn danger" id="excluirTpl">Excluir</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- DIALOG CLIENTE -->
+<dialog id="dlgCli"><form method="dialog" id="formCli">
+  <div class="dlg-h"><b id="dlgCliTit">Cliente</b><button class="btn sm" value="cancel">Fechar</button></div>
+  <div class="dlg-b">
+    <div class="info" id="cliInfo"></div>
+    <div class="f2">
+      <div><label>Nome *</label><input name="nome" required></div>
+      <div><label>Telefone / WhatsApp</label><input name="telefone" placeholder="42 99999-9999"></div>
+      <div><label>Segmento</label><select name="segmento"><option value="">—</option></select></div>
+      <div><label>Prioridade</label><select name="prioridade"><option value="">—</option><option>A</option><option>B</option><option>C</option></select></div>
+      <div><label>Bairro</label><input name="bairro"></div>
+      <div><label>Status</label><select name="status"></select></div>
+      <div><label>Contato (pessoa)</label><input name="contato" placeholder="Com quem você falou"></div>
+      <div><label>Próximo retorno</label><input name="retorno" type="date"></div>
+      <div><label>Pedido / acordo fechado</label><input name="pedido" placeholder="Ex: 10 chaveiros em consignação"></div>
+      <div><label>Valor fechado (R$)</label><input name="valor" inputmode="decimal" placeholder="0,00"></div>
+      <div><label>Data do fechamento</label><input name="dataFech" type="date"></div>
+      <div><label>Origem</label><input name="origem"></div>
+    </div>
+    <div style="margin-top:10px"><label>Observações</label><textarea name="obs"></textarea></div>
+    <div style="margin-top:10px">
+      <label>Histórico</label>
+      <div class="row"><input id="novaNota" placeholder="Anotação (ex: dono pediu pra voltar sexta)" style="flex:1"><button type="button" class="btn sm" id="addNota">Adicionar</button></div>
+      <div id="histCli" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <div class="dlg-f">
+    <button type="button" class="btn danger" id="excluirCli">Excluir</button>
+    <div class="spacer"></div>
+    <button type="button" class="btn wa" id="waCli">Enviar mensagem do segmento</button>
+    <button class="btn pri" value="save">Salvar</button>
+  </div>
+</form></dialog>
+
+<!-- DIALOG BACKUP -->
+<dialog id="dlgBk">
+  <div class="dlg-h"><b>Backup e importação</b><button class="btn sm" onclick="dlgBk.close()">Fechar</button></div>
+  <div class="dlg-b">
+    <p>Os dados ficam salvos <b>neste navegador</b>. Faça backup de vez em quando para não perder nada ou para levar para outro computador.</p>
+    <div class="row"><button class="btn pri" id="expJson">Baixar backup (.json)</button>
+      <label class="btn" style="margin:0;color:var(--ink);font-size:13px">Restaurar backup<input type="file" id="impJson" accept=".json" class="hide"></label></div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <h3>Leads de Guarapuava</h3>
+    <p class="hint">Adiciona de novo os leads originais que estiverem faltando (não mexe nos que já existem nem nos seus status e anotações).</p>
+    <button class="btn" id="recarregarSeed">Recarregar leads que faltam</button>
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <h3>Importar clientes por CSV</h3>
+    <p class="hint">Primeira linha com cabeçalho. Colunas reconhecidas: nome, telefone, segmento, bairro, cidade, origem, status, valor, pedido, obs. Separador vírgula ou ponto e vírgula.</p>
+    <label class="btn" style="margin:0;color:var(--ink);font-size:13px;display:inline-block">Escolher CSV<input type="file" id="impCsv" accept=".csv,.txt" class="hide"></label>
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <h3>Colar lista de contatos</h3>
+    <p class="hint">Um por linha: <code>Nome, telefone</code></p>
+    <textarea id="colarLista" placeholder="Loja X, 42 99999-8888"></textarea>
+    <button class="btn" id="btnColar" style="margin-top:8px">Adicionar contatos</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script src="leads-data.js"></script>
+<script src="mensagens.js"></script>
+<script>
+const STATUS = [
+  {id:'novo', nome:'Novo', cor:'var(--info)'},
+  {id:'enviado', nome:'Enviado', cor:'var(--pri)'},
+  {id:'respondeu', nome:'Respondeu', cor:'var(--teal)'},
+  {id:'visita', nome:'Visita', cor:'var(--warn)'},
+  {id:'fechado', nome:'Parceiro / Fechado', cor:'var(--ok)'},
+  {id:'perdido', nome:'Sem interesse', cor:'var(--bad)'},
+];
+const KEY = 'moldarte3d_crm_v2';
+const SEED = window.LEADS_SEED || {segs:[],offer:{},tpls:[],clientes:[]};
+const SEGS = SEED.segs;
+const AUTO = '__auto__';
+
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4)}
+function now(){return new Date().toISOString()}
+function seedCli(c){return {...c,status:'novo',hist:[],criado:now(),atualizado:''}}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY)); if(d&&d.clientes&&d.tpls) return d;}catch(e){}
+  return {clientes:SEED.clientes.map(seedCli), tpls:structuredClone(SEED.tpls)};
+}
+let db = load(); aplicaMensagens(); save();
+// Troca as mensagens por segmento quando mensagens.js tem uma versão nova
+function aplicaMensagens(){
+  const M=window.MENSAGENS; if(!M||(db.msgsVer||0)>=M.VERSAO)return;
+  for(const [seg,texto] of Object.entries(M.textos)){
+    const t=db.tpls.find(x=>x.segmento===seg);
+    if(t)t.texto=texto; else db.tpls.push({id:uid(),titulo:seg,segmento:seg,texto});
+  }
+  db.msgsVer=M.VERSAO;
+}
+function save(){try{localStorage.setItem(KEY, JSON.stringify(db))}catch(e){toast('Não foi possível salvar no navegador!')}}
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const parseVal=v=>{if(v==null||v==='')return 0; if(typeof v==='number')return v; v=String(v).replace(/[^\d,.-]/g,''); if(v.includes(','))v=v.replace(/\./g,'').replace(',','.'); return parseFloat(v)||0;};
+const fdata=iso=>iso?new Date(iso.length===10?iso+'T12:00':iso).toLocaleDateString('pt-BR'):'—';
+const stNome=id=>(STATUS.find(s=>s.id===id)||{}).nome||id;
+const tag=id=>`<span class="tag s-${id}">${stNome(id)}</span>`;
+const pri=p=>p?`<span class="p p-${esc(p)}" title="Prioridade ${esc(p)}">${esc(p)}</span>`:'';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function fone(t){let d=String(t||'').replace(/\D/g,''); if(!d)return ''; if(d.length<=11)d='55'+d; return d;}
+function ehCelular(c){if(c.whats!=null)return c.whats; const d=fone(c.telefone); return d.length===13&&d[4]==='9'}
+function saudacao(){const h=new Date().getHours(); return h<12?'bom dia':h<18?'boa tarde':'boa noite'}
+function preencher(txt,c){
+  c=c||{}; const pn=(c.contato||c.nome||'').trim().split(/\s+/)[0]||'';
+  return txt.replace(/\{saudacao\}/g,saudacao()).replace(/\{empresa\}/g,c.nome||'').replace(/\{nome\}/g,pn)
+    .replace(/\{bairro\}/g,c.bairro||'').replace(/\{cidade\}/g,c.cidade||'').replace(/\{valor\}/g,c.valor?brl(c.valor):'').replace(/\{pedido\}/g,c.pedido||'');
+}
+function tplDoCliente(c,fallbackId){
+  if(fallbackId&&fallbackId!==AUTO)return db.tpls.find(t=>t.id===fallbackId);
+  return db.tpls.find(t=>t.segmento&&t.segmento===c.segmento);
+}
+function waLink(c,txt){return `https://wa.me/${fone(c.telefone)}?text=${encodeURIComponent(txt)}`}
+function ultContato(c){const h=(c.hist||[]); return h.length?h[h.length-1].data:null}
+function registrarEnvio(c,t){
+  c.hist=c.hist||[]; c.hist.push({data:now(),tipo:'envio',texto:`"${t.titulo}"`});
+  if($('#autoStatus').checked&&c.status==='novo'){c.status='enviado'; c.hist.push({data:now(),tipo:'status',texto:'Novo → Enviado'})}
+  c.atualizado=now();
+}
+
+/* selects */
+const optSt=STATUS.map(s=>`<option value="${s.id}">${s.nome}</option>`).join('');
+const optSeg=SEGS.map(s=>`<option>${esc(s)}</option>`).join('');
+['#fStatus','#eStatus'].forEach(s=>$(s).insertAdjacentHTML('beforeend',optSt));
+['#fSeg','#eSeg','#kSeg','#tSeg'].forEach(s=>$(s).insertAdjacentHTML('beforeend',optSeg));
+document.querySelector('#formCli [name=status]').innerHTML=optSt;
+document.querySelector('#formCli [name=segmento]').insertAdjacentHTML('beforeend',optSeg);
+function atualizaBairros(){const b=[...new Set(db.clientes.map(c=>c.bairro).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt'));
+  const v=$('#fBairro').value; $('#fBairro').innerHTML='<option value="">Todos os bairros</option>'+b.map(x=>`<option>${esc(x)}</option>`).join(''); $('#fBairro').value=v}
+
+/* navegação */
+let view='painel';
+$('#nav').onclick=e=>{const b=e.target.closest('button'); if(b)go(b.dataset.v)};
+function go(v){view=v; document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hide',s.id!=='v-'+v)); render();
+  try{localStorage.setItem(KEY+'_view',v)}catch(e){}}
+function render(){({painel:rPainel,clientes:rClientes,funil:rFunil,envio:rEnvio,mensagens:rMsgs})[view]()}
+document.addEventListener('click',e=>{const tr=e.target.closest('[data-open]'); if(tr)abrirCli(tr.dataset.open)});
+
+/* painel */
+function rPainel(){
+  const cs=db.clientes, fech=cs.filter(c=>c.status==='fechado');
+  const tot=fech.reduce((a,c)=>a+parseVal(c.valor),0);
+  const contat=cs.filter(c=>c.status!=='novo').length;
+  const resp=cs.filter(c=>['respondeu','visita','fechado'].includes(c.status)).length;
+  const mes=new Date().toISOString().slice(0,7);
+  const totMes=fech.filter(c=>(c.dataFech||'').startsWith(mes)).reduce((a,c)=>a+parseVal(c.valor),0);
+  const k=[['Leads',cs.length],['Já contatei',contat],['Responderam',resp],['Visitas',cs.filter(c=>c.status==='visita').length],
+    ['Parceiros / fechados',fech.length],['Faturado total',brl(tot)],['Faturado no mês',brl(totMes)],['Taxa de resposta',contat?Math.round(resp/contat*100)+'%':'—']];
+  $('#kpis').innerHTML=k.map(([l,v])=>`<div class="card kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+  const ult=[...fech].sort((a,b)=>(b.dataFech||'').localeCompare(a.dataFech||'')).slice(0,6);
+  $('#ultFech').innerHTML=ult.length?`<table>${ult.map(c=>`<tr class="click" data-open="${c.id}"><td><b>${esc(c.nome)}</b><div class="muted small">${esc(c.pedido||'')}</div></td><td>${brl(parseVal(c.valor))}</td><td class="muted">${fdata(c.dataFech)}</td></tr>`).join('')}</table>`:'<p class="muted">Nenhum fechamento ainda.</p>';
+  const lim=Date.now()-3*864e5, hoje=new Date().toISOString().slice(0,10);
+  const ret=cs.filter(c=>!['fechado','perdido'].includes(c.status)&&((c.retorno&&c.retorno<=hoje)||(['enviado','respondeu','visita'].includes(c.status)&&new Date(ultContato(c)||0)<lim)))
+    .sort((a,b)=>(a.retorno||'9').localeCompare(b.retorno||'9')).slice(0,10);
+  $('#retorno').innerHTML=ret.length?`<table>${ret.map(c=>`<tr class="click" data-open="${c.id}"><td><b>${esc(c.nome)}</b></td><td>${tag(c.status)}</td><td class="muted small">${c.retorno&&c.retorno<=hoje?'retornar '+fdata(c.retorno):'últ. '+fdata(ultContato(c))}</td></tr>`).join('')}</table>`:'<p class="muted">Tudo em dia 👌</p>';
+  const segs=[...SEGS,...new Set(cs.map(c=>c.segmento||'(sem segmento)').filter(s=>!SEGS.includes(s)))];
+  $('#tbSeg').innerHTML='<thead><tr><th>Segmento</th><th>Leads</th><th>Contatados</th><th class="hide-m">Responderam</th><th>Fechados</th><th>Valor</th><th class="hide-m">Funil</th></tr></thead><tbody>'+segs.map(s=>{
+    const l=cs.filter(c=>(c.segmento||'(sem segmento)')===s); if(!l.length)return '';
+    const n=id=>l.filter(c=>c.status===id).length;
+    const bar=STATUS.map(st=>{const x=n(st.id); return x?`<i style="width:${x/l.length*100}%;background:${st.cor}" title="${st.nome}: ${x}"></i>`:''}).join('');
+    return `<tr><td>${pri((SEED.tiers||{})[s]&&SEED.tiers[s]!=='—'?SEED.tiers[s]:'')} ${esc(s)}</td><td>${l.length}</td><td>${l.length-n('novo')}</td><td class="hide-m">${n('respondeu')+n('visita')+n('fechado')}</td><td>${n('fechado')}</td><td>${brl(l.reduce((a,c)=>a+(c.status==='fechado'?parseVal(c.valor):0),0))}</td><td class="hide-m"><div class="bar">${bar}</div></td></tr>`}).join('')+'</tbody>';
+}
+
+/* clientes */
+let limite=100;
+['#busca','#fStatus','#fSeg','#fPri','#fBairro','#fWhats'].forEach(s=>$(s).addEventListener('input',()=>{limite=100;rClientes()}));
+function filtra({q,st,seg,pr,bairro,whats}){q=(q||'').toLowerCase().trim();
+  return db.clientes.filter(c=>(!st||c.status===st)&&(!seg||c.segmento===seg)&&(!pr||c.prioridade===pr)&&(!bairro||c.bairro===bairro)&&(!whats||ehCelular(c))
+    &&(!q||[c.nome,c.telefone,c.bairro,c.categoria,c.obs,c.pedido,c.contato,c.endereco].join(' ').toLowerCase().includes(q)))}
+const ordPri={A:0,B:1,C:2};
+function ordena(l){return l.sort((a,b)=>(b.atualizado||'').localeCompare(a.atualizado||'')||(ordPri[a.prioridade]??3)-(ordPri[b.prioridade]??3)||a.nome.localeCompare(b.nome,'pt'))}
+function rClientes(){
+  atualizaBairros();
+  const l=ordena(filtra({q:$('#busca').value,st:$('#fStatus').value,seg:$('#fSeg').value,pr:$('#fPri').value,bairro:$('#fBairro').value,whats:$('#fWhats').checked}));
+  $('#tbClientes').innerHTML=l.slice(0,limite).map(c=>`<tr class="click" data-open="${c.id}"><td>${pri(c.prioridade)}</td><td><b>${esc(c.nome)}</b><div class="muted small">${esc(c.telefone||'sem telefone')}${ehCelular(c)?' · WhatsApp':''}</div></td><td class="hide-m small">${esc(c.segmento||'')}</td><td class="hide-m small">${esc(c.bairro||'')}</td><td>${tag(c.status)}</td><td>${parseVal(c.valor)?brl(parseVal(c.valor)):'—'}</td><td class="hide-m muted small">${fdata(ultContato(c))}</td></tr>`).join('')||'<tr><td colspan="7" class="muted">Nenhum cliente encontrado.</td></tr>';
+  $('#contagem').textContent=`${Math.min(limite,l.length)} de ${l.length} (total ${db.clientes.length})`;
+  $('#maisCli').classList.toggle('hide',l.length<=limite);
+}
+$('#maisCli').onclick=()=>{limite+=200;rClientes()};
+$('#btnNovo').onclick=()=>abrirCli(null);
+$('#btnExpCsv').onclick=()=>{
+  const cols=['nome','telefone','segmento','prioridade','categoria','endereco','bairro','cidade','contato','status','pedido','valor','dataFech','retorno','obs'];
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv=[cols.join(';'),...db.clientes.map(c=>cols.map(k=>q(k==='status'?stNome(c.status):k==='valor'?String(parseVal(c.valor)).replace('.',','):c[k])).join(';'))].join('\n');
+  baixar('﻿'+csv,'clientes-moldarte3d.csv','text/csv');
+};
+
+/* dialog cliente */
+let atual=null;
+const F=$('#formCli');
+const CAMPOS=['nome','telefone','segmento','prioridade','bairro','status','contato','retorno','pedido','dataFech','origem','obs'];
+function abrirCli(id){
+  atual=id?structuredClone(db.clientes.find(c=>c.id===id)):{id:uid(),status:'novo',hist:[],criado:now(),cidade:'Guarapuava',origem:'Manual'};
+  $('#dlgCliTit').innerHTML=id?`${pri(atual.prioridade)} ${esc(atual.nome)}`:'Novo cliente';
+  for(const k of CAMPOS)F.elements[k].value=atual[k]||'';
+  F.elements.valor.value=atual.valor?String(parseVal(atual.valor)).replace('.',','):'';
+  const inf=[];
+  if(atual.categoria)inf.push(`<b>${esc(atual.categoria)}</b>`);
+  if(atual.endereco||atual.bairro)inf.push(`📍 ${esc([atual.endereco,atual.bairro,atual.cidade].filter(Boolean).join(', '))}`);
+  if(atual.nota)inf.push(`⭐ ${atual.nota} (${atual.aval||0} avaliações)`);
+  if(atual.site)inf.push(`<a href="${esc(atual.site)}" target="_blank" rel="noopener">${esc(atual.site.replace(/^https?:\/\/(www\.)?/,'').slice(0,50))}</a>`);
+  if(atual.telefone)inf.push(ehCelular(atual)?'📱 Celular / WhatsApp':'☎️ Telefone fixo, provavelmente sem WhatsApp');
+  const of=(SEED.offer||{})[atual.segmento]; if(of)inf.push(`<span class="muted">Oferta sugerida:</span> ${esc(of)}`);
+  $('#cliInfo').innerHTML=inf.join('<br>'); $('#cliInfo').classList.toggle('hide',!inf.length);
+  $('#excluirCli').classList.toggle('hide',!id);
+  rHist(); dlgCli.showModal();
+}
+function rHist(){$('#histCli').innerHTML=[...(atual.hist||[])].reverse().map(h=>`<div class="hist"><span class="muted small">${new Date(h.data).toLocaleString('pt-BR')} · ${h.tipo==='envio'?'Mensagem enviada':h.tipo==='status'?'Status':'Nota'}</span><div>${esc(h.texto)}</div></div>`).join('')||'<p class="muted">Sem histórico.</p>'}
+$('#addNota').onclick=()=>{const t=$('#novaNota').value.trim(); if(!t)return; atual.hist.push({data:now(),tipo:'nota',texto:t}); $('#novaNota').value=''; rHist()};
+$('#novaNota').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('#addNota').click()}};
+F.elements.status.onchange=()=>{if(F.elements.status.value==='fechado'&&!F.elements.dataFech.value)F.elements.dataFech.value=new Date().toISOString().slice(0,10)};
+function coletaForm(){
+  const ant=atual.status;
+  for(const k of CAMPOS)atual[k]=F.elements[k].value.trim();
+  atual.valor=parseVal(F.elements.valor.value);
+  if(ant!==atual.status&&db.clientes.some(c=>c.id===atual.id))atual.hist.push({data:now(),tipo:'status',texto:`${stNome(ant)} → ${stNome(atual.status)}`});
+  atual.atualizado=now();
+  const i=db.clientes.findIndex(c=>c.id===atual.id); if(i>=0)db.clientes[i]=atual; else db.clientes.push(atual);
+  save();
+}
+F.onsubmit=e=>{if(e.submitter&&e.submitter.value!=='save')return; coletaForm(); render(); toast('Salvo')};
+$('#excluirCli').onclick=()=>{if(!confirm(`Excluir ${atual.nome}?`))return; db.clientes=db.clientes.filter(c=>c.id!==atual.id); save(); dlgCli.close(); render(); toast('Excluído')};
+$('#waCli').onclick=()=>{
+  if(!F.reportValidity())return; coletaForm();
+  if(!fone(atual.telefone))return toast('Informe o telefone');
+  const t=tplDoCliente(atual,AUTO); const txt=t?preencher(t.texto,atual):'';
+  window.open(t?waLink(atual,txt):`https://wa.me/${fone(atual.telefone)}`,'_blank');
+  if(t){registrarEnvio(atual,t); save()}
+  F.elements.status.value=atual.status; rHist(); render();
+};
+
+/* funil */
+const LIM_COL=40;
+['#kSeg','#kPri'].forEach(s=>$(s).onchange=rFunil);
+function rFunil(){
+  const base=filtra({seg:$('#kSeg').value,pr:$('#kPri').value});
+  $('#kanban').innerHTML=STATUS.map(s=>{const l=ordena(base.filter(c=>c.status===s.id)); const tot=l.reduce((a,c)=>a+parseVal(c.valor),0);
+    return `<div class="col" data-st="${s.id}"><h4><span>${tag(s.id)} ${l.length}</span>${tot?`<span class="muted">${brl(tot)}</span>`:''}</h4>${l.slice(0,LIM_COL).map(c=>`<div class="kc" draggable="true" data-id="${c.id}">${pri(c.prioridade)} <b style="display:inline">${esc(c.nome)}</b><div class="muted small">${esc(c.pedido||c.segmento||'')}</div>${parseVal(c.valor)?`<div>${brl(parseVal(c.valor))}</div>`:''}</div>`).join('')}${l.length>LIM_COL?`<div class="more">+ ${l.length-LIM_COL} (use os filtros ou a aba Clientes)</div>`:''}</div>`}).join('');
+}
+const kb=$('#kanban');
+kb.addEventListener('dragstart',e=>{const k=e.target.closest('.kc'); if(k)e.dataTransfer.setData('text',k.dataset.id)});
+kb.addEventListener('dragover',e=>{const c=e.target.closest('.col'); if(c){e.preventDefault(); document.querySelectorAll('.col').forEach(x=>x.classList.toggle('drop',x===c))}});
+kb.addEventListener('drop',e=>{e.preventDefault(); const col=e.target.closest('.col'); const c=db.clientes.find(x=>x.id===e.dataTransfer.getData('text')); document.querySelectorAll('.col').forEach(x=>x.classList.remove('drop'));
+  if(!col||!c||c.status===col.dataset.st)return; const ant=c.status; c.status=col.dataset.st; c.hist=c.hist||[]; c.hist.push({data:now(),tipo:'status',texto:`${stNome(ant)} → ${stNome(c.status)}`});
+  if(c.status==='fechado'&&!c.dataFech)c.dataFech=new Date().toISOString().slice(0,10);
+  c.atualizado=now(); save(); rFunil();
+  if(c.status==='fechado'&&!parseVal(c.valor)){toast('Informe o valor e o que foi fechado'); abrirCli(c.id)}});
+kb.addEventListener('dragend',()=>document.querySelectorAll('.col').forEach(x=>x.classList.remove('drop')));
+kb.addEventListener('click',e=>{const k=e.target.closest('.kc'); if(k)abrirCli(k.dataset.id)});
+
+/* envio */
+let tplSel=AUTO; const selIds=new Set(); const enviados=new Set();
+['#eStatus','#eSeg','#ePri','#eBusca','#eWhats'].forEach(s=>$(s).addEventListener('input',rEnvio));
+function listaEnvio(){return ordena(filtra({q:$('#eBusca').value,st:$('#eStatus').value,seg:$('#eSeg').value,pr:$('#ePri').value,whats:$('#eWhats').checked})).filter(c=>fone(c.telefone))}
+function rEnvio(){
+  if(tplSel!==AUTO&&!db.tpls.some(t=>t.id===tplSel))tplSel=AUTO;
+  $('#envioTpls').innerHTML=`<div class="tpl ${tplSel===AUTO?'on':''}" data-id="${AUTO}"><b>🎯 Automática por segmento</b><div class="muted small">Cada cliente recebe a mensagem do segmento dele</div></div>`+
+    db.tpls.map(t=>`<div class="tpl ${t.id===tplSel?'on':''}" data-id="${t.id}"><b>${esc(t.titulo)}</b><div class="muted small">${t.segmento?'Segmento: '+esc(t.segmento):'Mensagem avulsa'}</div></div>`).join('');
+  const l=listaEnvio();
+  $('#envioLista').innerHTML=l.slice(0,300).map(c=>`<label><input type="checkbox" data-id="${c.id}" ${selIds.has(c.id)?'checked':''}> ${pri(c.prioridade)} <span style="flex:1">${esc(c.nome)} <span class="muted small">${esc(c.segmento||'')}</span></span>${tag(c.status)}</label>`).join('')||'<p class="muted" style="padding:10px">Nenhum cliente com esse filtro.</p>';
+  $('#envioCont').textContent=`${l.length} na lista${l.length>300?' (mostrando 300)':''} · ${selIds.size} selecionado(s)`;
+  rFila();
+}
+$('#envioTpls').onclick=e=>{const d=e.target.closest('.tpl'); if(d){tplSel=d.dataset.id; rEnvio()}};
+$('#envioLista').onchange=e=>{const id=e.target.dataset.id; e.target.checked?selIds.add(id):selIds.delete(id); $('#envioCont').textContent=$('#envioCont').textContent.replace(/\d+ selecionado/,selIds.size+' selecionado'); rFila()};
+$('#selTodos').onclick=()=>{const l=listaEnvio(); if(l.length>50&&!confirm(`Marcar ${l.length} clientes?`))return; l.forEach(c=>selIds.add(c.id)); rEnvio()};
+$('#selNenhum').onclick=()=>{selIds.clear(); enviados.clear(); rEnvio()};
+function rFila(){
+  const cs=db.clientes.filter(c=>selIds.has(c.id));
+  const t0=tplSel===AUTO?null:db.tpls.find(t=>t.id===tplSel);
+  if(!cs.length){$('#envioPrev').textContent=t0?preencher(t0.texto,{nome:'(nome do estabelecimento)'}):'Escolha os clientes para ver a mensagem pronta. No modo automático, cada um recebe a mensagem do seu segmento.'; $('#fila').innerHTML=''; return}
+  const t1=tplDoCliente(cs[0],tplSel);
+  $('#envioPrev').textContent=t1?`Para: ${cs[0].nome}\n\n`+preencher(t1.texto,cs[0]):`${cs[0].nome}: não há mensagem salva para o segmento "${cs[0].segmento||'—'}".`;
+  const feitos=cs.filter(c=>enviados.has(c.id)).length;
+  $('#fila').innerHTML=`<div class="hint" style="margin-bottom:4px">${cs.length} na fila · ${feitos} enviado(s) nesta sessão</div>`+cs.map(c=>{const t=tplDoCliente(c,tplSel);
+    return `<div class="queue-item ${enviados.has(c.id)?'done':''}"><span>${pri(c.prioridade)} <b>${esc(c.nome)}</b><div class="muted small">${esc(c.telefone)} · ${t?esc(t.titulo):'<span style="color:var(--bad)">sem mensagem para o segmento</span>'}</div></span><span class="row" style="flex-wrap:nowrap"><button class="btn sm" data-copy="${c.id}" ${t?'':'disabled'}>Copiar</button><button class="btn wa sm" data-send="${c.id}" ${t?'':'disabled'}>${enviados.has(c.id)?'Enviar de novo':'WhatsApp'}</button></span></div>`}).join('');
+}
+$('#fila').onclick=e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  const c=db.clientes.find(x=>x.id===(b.dataset.send||b.dataset.copy)); const t=tplDoCliente(c,tplSel); if(!t)return;
+  const txt=preencher(t.texto,c);
+  if(b.dataset.copy){navigator.clipboard.writeText(txt).then(()=>toast('Mensagem copiada')); return}
+  window.open(waLink(c,txt),'_blank');
+  registrarEnvio(c,t); enviados.add(c.id); save(); rEnvio();
+};
+
+/* mensagens */
+let tplEdit=null;
+function rMsgs(){
+  if(!db.tpls.some(t=>t.id===tplEdit))tplEdit=db.tpls[0]?.id||null;
+  $('#listaTpls').innerHTML=db.tpls.map(t=>`<div class="tpl ${t.id===tplEdit?'on':''}" data-id="${t.id}"><b>${esc(t.titulo)}</b>${t.segmento?'':'<div class="muted small">avulsa</div>'}</div>`).join('')||'<p class="muted">Nenhuma mensagem.</p>';
+  const t=db.tpls.find(x=>x.id===tplEdit); $('#editTpl').classList.toggle('hide',!t);
+  if(t){$('#tTitulo').value=t.titulo; $('#tTexto').value=t.texto; $('#tSeg').value=t.segmento||''; mostraOferta()}
+}
+function mostraOferta(){const of=(SEED.offer||{})[$('#tSeg').value]; $('#tOffer').innerHTML=of?`<span class="muted">Oferta para este segmento:</span> ${esc(of)}`:''; $('#tOffer').classList.toggle('hide',!of)}
+$('#tSeg').onchange=mostraOferta;
+$('#listaTpls').onclick=e=>{const d=e.target.closest('.tpl'); if(d){tplEdit=d.dataset.id; rMsgs()}};
+$('#btnNovaMsg').onclick=()=>{const t={id:uid(),titulo:'Nova mensagem',segmento:'',texto:'Olá, {saudacao}! Tudo bem?'}; db.tpls.push(t); tplEdit=t.id; save(); rMsgs(); $('#tTitulo').select()};
+$('#salvarTpl').onclick=()=>{const t=db.tpls.find(x=>x.id===tplEdit); if(!t)return; const seg=$('#tSeg').value;
+  if(seg&&db.tpls.some(x=>x.id!==t.id&&x.segmento===seg)&&!confirm(`Já existe uma mensagem para "${seg}". Tirar o segmento da outra e usar esta no envio automático?`))return;
+  if(seg)db.tpls.forEach(x=>{if(x.id!==t.id&&x.segmento===seg)x.segmento=''});
+  t.titulo=$('#tTitulo').value.trim()||'Sem título'; t.segmento=seg; t.texto=$('#tTexto').value; save(); rMsgs(); toast('Mensagem salva')};
+$('#copiarTpl').onclick=()=>navigator.clipboard.writeText($('#tTexto').value).then(()=>toast('Copiado'));
+$('#excluirTpl').onclick=()=>{if(!confirm('Excluir esta mensagem?'))return; db.tpls=db.tpls.filter(x=>x.id!==tplEdit); save(); rMsgs()};
+
+/* backup / import */
+$('#btnBackup').onclick=()=>dlgBk.showModal();
+function baixar(conteudo,nome,tipo){const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([conteudo],{type:tipo})); a.download=nome; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('#expJson').onclick=()=>baixar(JSON.stringify(db),`backup-moldarte3d-${new Date().toISOString().slice(0,10)}.json`,'application/json');
+$('#impJson').onchange=async e=>{const f=e.target.files[0]; e.target.value=''; if(!f)return; try{const d=JSON.parse(await f.text()); if(!d.clientes||!d.tpls)throw 0;
+  if(!confirm(`Substituir os dados atuais por este backup (${d.clientes.length} clientes, ${d.tpls.length} mensagens)?`))return; db=d; save(); dlgBk.close(); render(); toast('Backup restaurado')}catch(_){alert('Arquivo de backup inválido')}};
+$('#recarregarSeed').onclick=()=>{const ids=new Set(db.clientes.map(c=>c.id)); const novos=SEED.clientes.filter(c=>!ids.has(c.id)).map(seedCli);
+  db.clientes.push(...novos); save(); dlgBk.close(); render(); toast(`${novos.length} leads adicionados`)};
+function novoCli(o){const s=String(o.status||'').toLowerCase(); const st=STATUS.find(x=>x.id===s||x.nome.toLowerCase()===s);
+  return {id:uid(),nome:o.nome||'',telefone:o.telefone||'',segmento:SEGS.find(x=>x.toLowerCase()===String(o.segmento||'').toLowerCase())||o.segmento||'',bairro:o.bairro||'',cidade:o.cidade||'',origem:o.origem||'Importado',status:st?st.id:'novo',pedido:o.pedido||'',valor:parseVal(o.valor),obs:o.obs||'',hist:[],criado:now(),atualizado:now()}}
+function parseCsv(txt){
+  const l1=txt.split('\n')[0]; const sep=(l1.match(/;/g)||[]).length>(l1.match(/,/g)||[]).length?';':',';
+  const rows=[]; let r=[],f='',q=false;
+  for(let i=0;i<txt.length;i++){const ch=txt[i];
+    if(q){if(ch==='"'){if(txt[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+    else if(ch==='"')q=true; else if(ch===sep){r.push(f);f=''} else if(ch==='\n'){r.push(f);rows.push(r);r=[];f=''} else if(ch!=='\r')f+=ch}
+  if(f||r.length){r.push(f);rows.push(r)} return rows.filter(x=>x.some(v=>v.trim()));
+}
+const ALIAS={nome:['nome','name','cliente','empresa','estabelecimento'],telefone:['telefone','fone','whatsapp','celular','phone','numero','número'],segmento:['segmento'],bairro:['bairro'],cidade:['cidade'],origem:['origem'],status:['status'],valor:['valor','valor fechado'],pedido:['pedido'],obs:['obs','observacoes','observações','observacao','observação']};
+$('#impCsv').onchange=async e=>{const f=e.target.files[0]; e.target.value=''; if(!f)return; const rows=parseCsv((await f.text()).replace(/^﻿/,''));
+  if(rows.length<2)return alert('CSV vazio'); const h=rows[0].map(x=>x.trim().toLowerCase()); const idx={};
+  for(const k in ALIAS){const i=h.findIndex(x=>ALIAS[k].includes(x)); if(i>=0)idx[k]=i} if(idx.nome==null)return alert('Não achei a coluna "nome" no CSV');
+  let n=0; for(const r of rows.slice(1)){const o={}; for(const k in idx)o[k]=(r[idx[k]]||'').trim(); if(o.nome){db.clientes.push(novoCli(o)); n++}}
+  save(); dlgBk.close(); go('clientes'); toast(`${n} clientes importados`)};
+$('#btnColar').onclick=()=>{let n=0; for(const l of $('#colarLista').value.split('\n')){const m=l.trim(); if(!m)continue; const i=m.search(/[,;\t]/);
+  const nome=(i>=0?m.slice(0,i):m).trim(); if(nome){db.clientes.push(novoCli({nome,telefone:i>=0?m.slice(i+1).trim():''})); n++}}
+  $('#colarLista').value=''; save(); dlgBk.close(); go('clientes'); toast(`${n} contatos adicionados`)};
+
+/* init */
+let v0='painel'; try{v0=localStorage.getItem(KEY+'_view')||'painel'}catch(e){}
+go(v0);
+</script>
+</body>
+</html>
